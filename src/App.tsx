@@ -46,8 +46,11 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#060a10] text-white">
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-[600px] h-[400px] bg-cyan-500/[0.04] rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[350px] bg-blue-600/[0.04] rounded-full blur-3xl" />
+        <div className="absolute -top-32 left-1/4 w-[700px] h-[500px] bg-cyan-500/[0.06] rounded-full blur-[120px]" />
+        <div className="absolute top-1/2 -left-40 w-[400px] h-[400px] bg-blue-600/[0.05] rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 right-1/4 w-[600px] h-[400px] bg-blue-700/[0.05] rounded-full blur-[100px]" />
+        <div className="absolute top-1/3 right-0 w-[300px] h-[300px] bg-cyan-400/[0.04] rounded-full blur-[80px]" />
+        <div className="absolute bottom-1/4 left-1/3 w-[200px] h-[200px] bg-emerald-500/[0.04] rounded-full blur-[80px]" />
       </div>
 
       <Sidebar />

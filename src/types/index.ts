@@ -1,5 +1,5 @@
 export type RiskLevel = 'Low' | 'Medium' | 'High';
-export type ClaimStatus = 'pending' | 'approved' | 'under_review' | 'flagged' | 'rejected';
+export type ClaimStatus = 'pending' | 'approved' | 'under_review' | 'flagged' | 'rejected' | 'pending_admin_review';
 export type TransactionType = 'product' | 'cab' | 'travel';
 
 export interface UserProfile {

@@ -10,6 +10,8 @@ import { useAppStore } from '../lib/store';
 import type { TransactionType } from '../types';
 
 const DEMO_USER_ID = '00000000-0000-0000-0000-000000000001';
+const MAX_CLAIMS_PER_INSURANCE = 1;
+const MAX_TOTAL_CLAIMS_PER_DAY = 5;
 
 export function useSimulation() {
   const {
@@ -106,18 +108,47 @@ export function useSimulation() {
       return null;
     }
 
+    const currentClaims = useAppStore.getState().claims;
+
+    const claimsOnThisInsurance = currentClaims.filter(
+      (c) => c.insurance_id === targetIns.id
+    );
+    if (claimsOnThisInsurance.length >= MAX_CLAIMS_PER_INSURANCE) {
+      addToast({
+        type: 'error',
+        title: 'Claim Limit Reached',
+        message: `This insurance policy has already been claimed. Each policy allows only ${MAX_CLAIMS_PER_INSURANCE} claim.`,
+        duration: 6000,
+      });
+      return null;
+    }
+
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const claimsToday = currentClaims.filter(
+      (c) => new Date(c.created_at) > oneDayAgo
+    );
+    if (claimsToday.length >= MAX_TOTAL_CLAIMS_PER_DAY) {
+      addToast({
+        type: 'error',
+        title: 'Daily Claim Limit Reached',
+        message: `You have reached the daily limit of ${MAX_TOTAL_CLAIMS_PER_DAY} claims. Please try again tomorrow.`,
+        duration: 6000,
+      });
+      return null;
+    }
+
     const txs = useAppStore.getState().transactions;
     const tx = txs.find((t) => t.id === targetIns.transaction_id);
     const txType = (tx?.type ?? 'product') as TransactionType;
     const incidentType = getRandomIncidentType(txType);
 
-    const recentClaims = claims.filter(
+    const recentClaims = currentClaims.filter(
       (c) => new Date(c.created_at) > new Date(Date.now() - 60 * 60 * 1000)
     );
 
     const fraudScore = calculateFraudScore(
       trustScore,
-      claims.length,
+      currentClaims.length,
       recentClaims.length,
       tx?.risk_level ?? 'Low',
     );
@@ -126,7 +157,7 @@ export function useSimulation() {
     const decision = evaluateClaim(
       trustScore,
       tx?.risk_level ?? 'Low',
-      claims.length,
+      currentClaims.length,
       fraudScore,
       claimAmount,
       targetIns.coverage,
@@ -192,6 +223,13 @@ export function useSimulation() {
         type: 'error',
         title: 'Fraud Alert Triggered',
         message: `Claim flagged — Fraud score: ${fraudScore}/100. Manual review required.`,
+        duration: 6000,
+      });
+    } else if (decision.status === 'pending_admin_review') {
+      addToast({
+        type: 'warning',
+        title: 'Admin Approval Required',
+        message: `High-value claim of $${claimAmount.toFixed(2)} sent to Admin Panel for review before payout.`,
         duration: 6000,
       });
     } else if (decision.status === 'approved') {

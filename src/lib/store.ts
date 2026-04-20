@@ -18,6 +18,8 @@ interface AppState {
   addInsurance: (ins: Insurance) => void;
   addClaim: (claim: Claim) => void;
   updateClaim: (id: string, updates: Partial<Claim>) => void;
+  approveClaim: (id: string) => void;
+  rejectClaim: (id: string) => void;
   addFraudAlert: (alert: FraudAlert) => void;
   addAILog: (log: AIDecisionLog) => void;
   addToast: (toast: Omit<ToastMessage, 'id'>) => void;
@@ -56,6 +58,25 @@ export const useAppStore = create<AppState>((set) => ({
   updateClaim: (id, updates) =>
     set((state) => ({
       claims: state.claims.map((c) => (c.id === id ? { ...c, ...updates } : c)),
+    })),
+  approveClaim: (id) =>
+    set((state) => ({
+      claims: state.claims.map((c) =>
+        c.id === id ? { ...c, status: 'approved' as const, settled_at: new Date().toISOString() } : c
+      ),
+      profile: state.profile
+        ? {
+            ...state.profile,
+            approved_claims: state.profile.approved_claims + 1,
+            trust_score: Math.max(0, state.profile.trust_score - 2),
+          }
+        : null,
+    })),
+  rejectClaim: (id) =>
+    set((state) => ({
+      claims: state.claims.map((c) =>
+        c.id === id ? { ...c, status: 'rejected' as const } : c
+      ),
     })),
   addFraudAlert: (alert) =>
     set((state) => ({ fraudAlerts: [alert, ...state.fraudAlerts] })),

@@ -145,6 +145,9 @@ export function evaluateClaim(
     },
   ];
 
+  const isLargeClaimValue = claimAmount > 300;
+  const isVeryLargeClaimValue = claimAmount > 600;
+
   let status: ClaimStatus;
   let reason: string;
 
@@ -154,6 +157,12 @@ export function evaluateClaim(
   } else if (isLowTrust && isHighValue) {
     status = 'flagged';
     reason = 'Flagged due to low trust score and high claim value. Fraud indicators detected.';
+  } else if (isVeryLargeClaimValue && !isHighFraud) {
+    status = 'pending_admin_review';
+    reason = `Claim amount $${claimAmount.toFixed(2)} exceeds the $600 threshold — escalated to admin for manual approval before settlement.`;
+  } else if (isLargeClaimValue && fraudScore > 30) {
+    status = 'pending_admin_review';
+    reason = `High-value claim with elevated fraud indicators (fraud score: ${fraudScore}/100). Admin approval required before payout.`;
   } else if (isHighFrequency && riskLevel === 'High') {
     status = 'under_review';
     reason = 'Under review: Multiple claims detected with high-risk profile. Verifying incident authenticity.';
@@ -224,6 +233,7 @@ export function updateTrustScore(
     flagged: -15,
     rejected: -8,
     pending: 0,
+    pending_admin_review: -3,
   };
   const delta = deltas[claimStatus] ?? 0;
   return Math.max(0, Math.min(100, currentScore + delta));
