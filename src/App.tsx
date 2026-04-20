@@ -46,11 +46,11 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#060a10] text-white">
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-32 left-1/4 w-[700px] h-[500px] bg-cyan-500/[0.06] rounded-full blur-[120px]" />
-        <div className="absolute top-1/2 -left-40 w-[400px] h-[400px] bg-blue-600/[0.05] rounded-full blur-[100px]" />
-        <div className="absolute bottom-0 right-1/4 w-[600px] h-[400px] bg-blue-700/[0.05] rounded-full blur-[100px]" />
-        <div className="absolute top-1/3 right-0 w-[300px] h-[300px] bg-cyan-400/[0.04] rounded-full blur-[80px]" />
-        <div className="absolute bottom-1/4 left-1/3 w-[200px] h-[200px] bg-emerald-500/[0.04] rounded-full blur-[80px]" />
+        <div className="absolute -top-48 left-1/4 w-[800px] h-[600px] rounded-full blur-[140px]" style={{ background: 'radial-gradient(ellipse, rgba(88,28,235,0.12) 0%, rgba(59,130,246,0.08) 50%, transparent 70%)' }} />
+        <div className="absolute top-1/2 -left-60 w-[500px] h-[500px] rounded-full blur-[120px]" style={{ background: 'radial-gradient(ellipse, rgba(124,58,237,0.1) 0%, rgba(99,102,241,0.06) 50%, transparent 70%)' }} />
+        <div className="absolute bottom-0 right-1/4 w-[700px] h-[500px] rounded-full blur-[120px]" style={{ background: 'radial-gradient(ellipse, rgba(59,130,246,0.08) 0%, rgba(88,28,235,0.06) 50%, transparent 70%)' }} />
+        <div className="absolute top-1/4 right-0 w-[400px] h-[400px] rounded-full blur-[100px]" style={{ background: 'radial-gradient(ellipse, rgba(6,182,212,0.06) 0%, transparent 70%)' }} />
+        <div className="absolute bottom-1/3 left-1/3 w-[300px] h-[300px] rounded-full blur-[80px]" style={{ background: 'radial-gradient(ellipse, rgba(139,92,246,0.07) 0%, transparent 70%)' }} />
       </div>
 
       <Sidebar />

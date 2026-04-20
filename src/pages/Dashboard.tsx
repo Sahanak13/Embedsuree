@@ -10,6 +10,13 @@ import { RiskGauge } from '../components/ui/RiskGauge';
 import { RevenueChart } from '../components/charts/RevenueChart';
 import { RiskDistribution } from '../components/charts/RiskDistribution';
 
+const CARD_STYLE = {
+  background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
+  border: '1px solid rgba(139,92,246,0.15)',
+  backdropFilter: 'blur(24px)',
+  WebkitBackdropFilter: 'blur(24px)',
+};
+
 export function Dashboard() {
   const { profile, transactions, insurances, claims, fraudAlerts } = useAppStore();
 
@@ -78,23 +85,23 @@ export function Dashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="p-6 rounded-2xl border border-slate-700/50 bg-slate-900/60 backdrop-blur-xl flex flex-col items-center gap-2"
+          whileHover={{ y: -2 }}
+          className="p-6 rounded-2xl flex flex-col items-center gap-2 transition-all duration-200"
+          style={CARD_STYLE}
         >
-          <h3 className="text-sm font-semibold text-slate-400 mb-2">Trust Score</h3>
+          <h3 className="text-sm font-semibold text-slate-300 mb-2">Trust Score</h3>
           <TrustScore score={trustScore} size={140} />
           <div className="w-full mt-2 space-y-2">
-            <div className="flex justify-between text-xs">
-              <span className="text-slate-500">Total Claims</span>
-              <span className="text-white font-medium">{profile?.total_claims ?? 0}</span>
-            </div>
-            <div className="flex justify-between text-xs">
-              <span className="text-slate-500">Flagged</span>
-              <span className="text-red-400 font-medium">{profile?.flagged_claims ?? 0}</span>
-            </div>
-            <div className="flex justify-between text-xs">
-              <span className="text-slate-500">Approved</span>
-              <span className="text-emerald-400 font-medium">{profile?.approved_claims ?? 0}</span>
-            </div>
+            {[
+              { label: 'Total Claims', value: profile?.total_claims ?? 0, color: 'text-white' },
+              { label: 'Flagged', value: profile?.flagged_claims ?? 0, color: 'text-red-400' },
+              { label: 'Approved', value: profile?.approved_claims ?? 0, color: 'text-emerald-400' },
+            ].map((item) => (
+              <div key={item.label} className="flex justify-between text-xs">
+                <span className="text-slate-500">{item.label}</span>
+                <span className={`font-semibold ${item.color}`}>{item.value}</span>
+              </div>
+            ))}
           </div>
         </motion.div>
 
@@ -102,18 +109,20 @@ export function Dashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 }}
-          className="p-6 rounded-2xl border border-slate-700/50 bg-slate-900/60 backdrop-blur-xl flex flex-col items-center gap-2"
+          whileHover={{ y: -2 }}
+          className="p-6 rounded-2xl flex flex-col items-center gap-2 transition-all duration-200"
+          style={CARD_STYLE}
         >
-          <h3 className="text-sm font-semibold text-slate-400 mb-2">Avg Risk Level</h3>
+          <h3 className="text-sm font-semibold text-slate-300 mb-2">Avg Risk Level</h3>
           <RiskGauge score={avgRiskScore} level={avgRiskLevel} size={160} />
           <div className="w-full mt-2 space-y-2">
             <div className="flex justify-between text-xs">
               <span className="text-slate-500">Active Policies</span>
-              <span className="text-white font-medium">{activeInsurances}</span>
+              <span className="text-white font-semibold">{activeInsurances}</span>
             </div>
             <div className="flex justify-between text-xs">
               <span className="text-slate-500">Total Premium</span>
-              <span className="text-cyan-400 font-medium">${totalPremiums.toFixed(2)}</span>
+              <span className="text-cyan-400 font-semibold">${totalPremiums.toFixed(2)}</span>
             </div>
           </div>
         </motion.div>
@@ -122,14 +131,22 @@ export function Dashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="p-6 rounded-2xl border border-slate-700/50 bg-slate-900/60 backdrop-blur-xl"
+          whileHover={{ y: -2 }}
+          className="p-6 rounded-2xl transition-all duration-200"
+          style={CARD_STYLE}
         >
-          <h3 className="text-sm font-semibold text-slate-400 mb-4">Risk Distribution</h3>
+          <h3 className="text-sm font-semibold text-slate-300 mb-4">Risk Distribution</h3>
           <RiskDistribution />
-          <div className="mt-4 p-3 rounded-xl bg-cyan-500/5 border border-cyan-500/20">
+          <div
+            className="mt-4 p-3 rounded-xl"
+            style={{
+              background: 'linear-gradient(135deg, rgba(124,58,237,0.1) 0%, rgba(59,130,246,0.06) 100%)',
+              border: '1px solid rgba(139,92,246,0.2)',
+            }}
+          >
             <div className="flex items-center gap-2 mb-1">
-              <Users className="w-3.5 h-3.5 text-cyan-400" />
-              <span className="text-xs text-cyan-400 font-semibold">Market Opportunity</span>
+              <Users className="w-3.5 h-3.5" style={{ color: '#a78bfa' }} />
+              <span className="text-xs font-semibold" style={{ color: '#a78bfa' }}>Market Opportunity</span>
             </div>
             <p className="text-xs text-slate-500">60-70% of transactions globally remain uninsured — 300M+ user opportunity</p>
           </div>
@@ -141,13 +158,20 @@ export function Dashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35 }}
-          className="p-6 rounded-2xl border border-slate-700/50 bg-slate-900/60 backdrop-blur-xl"
+          whileHover={{ y: -2 }}
+          className="p-6 rounded-2xl transition-all duration-200"
+          style={CARD_STYLE}
         >
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-semibold text-white">Revenue Trend</h3>
             <div className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-cyan-400" />
-              <span className="text-xs text-emerald-400 font-semibold">+24% YTD</span>
+              <TrendingUp className="w-4 h-4 text-emerald-400" />
+              <span
+                className="text-xs font-bold px-2 py-0.5 rounded-lg"
+                style={{ color: '#34d399', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.2)' }}
+              >
+                +24% YTD
+              </span>
             </div>
           </div>
           <RevenueChart />
@@ -157,27 +181,44 @@ export function Dashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="p-6 rounded-2xl border border-slate-700/50 bg-slate-900/60 backdrop-blur-xl"
+          whileHover={{ y: -2 }}
+          className="p-6 rounded-2xl transition-all duration-200"
+          style={CARD_STYLE}
         >
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-semibold text-white">Recent Transactions</h3>
-            <span className="text-xs text-slate-500">{transactions.length} total</span>
+            <span
+              className="text-xs px-2 py-0.5 rounded-lg font-medium"
+              style={{ color: 'rgba(167,139,250,0.9)', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)' }}
+            >
+              {transactions.length} total
+            </span>
           </div>
           {recentTransactions.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10 text-slate-600">
-              <Clock className="w-10 h-10 mb-3 opacity-30" />
-              <p className="text-sm">No transactions yet</p>
-              <p className="text-xs mt-1">Use the Simulation page to create transactions</p>
+              <div
+                className="w-12 h-12 rounded-2xl flex items-center justify-center mb-3"
+                style={{ background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.15)' }}
+              >
+                <Clock className="w-6 h-6 opacity-40" style={{ color: '#a78bfa' }} />
+              </div>
+              <p className="text-sm text-slate-500">No transactions yet</p>
+              <p className="text-xs mt-1 text-slate-600">Use the Simulation page to create transactions</p>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {recentTransactions.map((tx, i) => (
                 <motion.div
                   key={tx.id}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-slate-700/30 hover:border-slate-600/50 transition-colors"
+                  whileHover={{ x: 3 }}
+                  className="flex items-center gap-3 p-3 rounded-xl transition-all duration-200 cursor-default"
+                  style={{
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(139,92,246,0.1)',
+                  }}
                 >
                   <div className="text-lg">{typeIcons[tx.type]}</div>
                   <div className="flex-1 min-w-0">
@@ -210,10 +251,10 @@ export function Dashboard() {
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { icon: DollarSign, label: 'Revenue This Month', value: '$142,380', color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/20' },
-          { icon: Shield, label: 'Policies Issued', value: '12,847', color: 'text-cyan-400', bg: 'bg-cyan-500/10 border-cyan-500/20' },
-          { icon: FileCheck, label: 'Claims Settled', value: '98.2%', color: 'text-blue-400', bg: 'bg-blue-500/10 border-blue-500/20' },
-          { icon: AlertTriangle, label: 'Fraud Prevented', value: '$2.4M', color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' },
+          { icon: DollarSign, label: 'Revenue This Month', value: '$142,380', gradient: 'linear-gradient(135deg, rgba(16,185,129,0.14) 0%, rgba(6,182,212,0.06) 100%)', border: 'rgba(16,185,129,0.22)', color: '#34d399' },
+          { icon: Shield, label: 'Policies Issued', value: '12,847', gradient: 'linear-gradient(135deg, rgba(6,182,212,0.14) 0%, rgba(124,58,237,0.06) 100%)', border: 'rgba(6,182,212,0.22)', color: '#22d3ee' },
+          { icon: FileCheck, label: 'Claims Settled', value: '98.2%', gradient: 'linear-gradient(135deg, rgba(59,130,246,0.14) 0%, rgba(139,92,246,0.06) 100%)', border: 'rgba(59,130,246,0.22)', color: '#60a5fa' },
+          { icon: AlertTriangle, label: 'Fraud Prevented', value: '$2.4M', gradient: 'linear-gradient(135deg, rgba(245,158,11,0.14) 0%, rgba(239,68,68,0.06) 100%)', border: 'rgba(245,158,11,0.22)', color: '#fbbf24' },
         ].map((item, i) => {
           const Icon = item.icon;
           return (
@@ -222,11 +263,18 @@ export function Dashboard() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 + i * 0.05 }}
-              className={`p-4 rounded-2xl border ${item.bg} backdrop-blur-xl`}
+              whileHover={{ y: -3, scale: 1.02 }}
+              className="p-4 rounded-2xl transition-all duration-200 cursor-default"
+              style={{
+                background: item.gradient,
+                border: `1px solid ${item.border}`,
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+              }}
             >
-              <Icon className={`w-5 h-5 ${item.color} mb-2`} />
-              <div className={`text-xl font-bold ${item.color}`}>{item.value}</div>
-              <div className="text-xs text-slate-500 mt-0.5">{item.label}</div>
+              <Icon className="w-5 h-5 mb-2" style={{ color: item.color }} />
+              <div className="text-xl font-bold mb-0.5" style={{ color: item.color }}>{item.value}</div>
+              <div className="text-xs text-slate-500">{item.label}</div>
             </motion.div>
           );
         })}
