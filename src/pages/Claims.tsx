@@ -7,62 +7,36 @@ import {
 import { useAppStore } from '../lib/store';
 import type { ClaimStatus } from '../types';
 
+const PANEL = {
+  background: 'linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 100%)',
+  border: '1px solid rgba(139,92,246,0.15)',
+  backdropFilter: 'blur(28px)',
+  WebkitBackdropFilter: 'blur(28px)',
+  boxShadow: '0 8px 32px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.025) inset',
+};
+
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.07 } },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } },
+};
+
 const STATUS_CONFIG: Record<ClaimStatus, {
   label: string;
-  color: string;
-  bg: string;
-  border: string;
-  glow: string;
+  accentColor: string;
+  accentRgb: string;
   icon: React.FC<{ className?: string }>;
 }> = {
-  approved: {
-    label: 'Approved',
-    color: 'text-emerald-400',
-    bg: 'bg-emerald-500/10',
-    border: 'border-emerald-500/30',
-    glow: 'shadow-emerald-500/10',
-    icon: CheckCircle,
-  },
-  under_review: {
-    label: 'Under Review',
-    color: 'text-amber-400',
-    bg: 'bg-amber-500/10',
-    border: 'border-amber-500/30',
-    glow: 'shadow-amber-500/10',
-    icon: Clock,
-  },
-  flagged: {
-    label: 'Fraud Flagged',
-    color: 'text-red-400',
-    bg: 'bg-red-500/10',
-    border: 'border-red-500/30',
-    glow: 'shadow-red-500/10',
-    icon: AlertTriangle,
-  },
-  rejected: {
-    label: 'Rejected',
-    color: 'text-slate-400',
-    bg: 'bg-slate-700/20',
-    border: 'border-slate-700/50',
-    glow: '',
-    icon: XCircle,
-  },
-  pending: {
-    label: 'Pending',
-    color: 'text-blue-400',
-    bg: 'bg-blue-500/10',
-    border: 'border-blue-500/30',
-    glow: 'shadow-blue-500/10',
-    icon: Clock,
-  },
-  pending_admin_review: {
-    label: 'Admin Review',
-    color: 'text-orange-400',
-    bg: 'bg-orange-500/10',
-    border: 'border-orange-500/40',
-    glow: 'shadow-orange-500/15',
-    icon: ShieldCheck,
-  },
+  approved: { label: 'Approved', accentColor: '#34d399', accentRgb: '16,185,129', icon: CheckCircle },
+  under_review: { label: 'Under Review', accentColor: '#fbbf24', accentRgb: '245,158,11', icon: Clock },
+  flagged: { label: 'Fraud Flagged', accentColor: '#f87171', accentRgb: '239,68,68', icon: AlertTriangle },
+  rejected: { label: 'Rejected', accentColor: '#94a3b8', accentRgb: '148,163,184', icon: XCircle },
+  pending: { label: 'Pending', accentColor: '#60a5fa', accentRgb: '59,130,246', icon: Clock },
+  pending_admin_review: { label: 'Admin Review', accentColor: '#fb923c', accentRgb: '249,115,22', icon: ShieldCheck },
 };
 
 type FilterType = 'all' | ClaimStatus;
@@ -73,7 +47,6 @@ export function Claims() {
   const [expanded, setExpanded] = useState<string | null>(null);
 
   const filtered = filter === 'all' ? claims : claims.filter((c) => c.status === filter);
-
   const totalAmount = claims.filter((c) => c.status === 'approved').reduce((s, c) => s + c.amount, 0);
   const pendingCount = claims.filter((c) => c.status === 'under_review' || c.status === 'pending').length;
   const flaggedCount = claims.filter((c) => c.status === 'flagged').length;
@@ -95,65 +68,71 @@ export function Claims() {
   ];
 
   const STAT_CARDS = [
-    { label: 'Total Claims', value: claims.length, icon: FileText, color: 'text-cyan-400', bg: 'bg-cyan-500/[0.08]', border: 'border-cyan-500/20', glow: 'shadow-cyan-500/10' },
-    { label: 'Settled Amount', value: `$${totalAmount.toFixed(2)}`, icon: DollarSign, color: 'text-emerald-400', bg: 'bg-emerald-500/[0.08]', border: 'border-emerald-500/20', glow: 'shadow-emerald-500/10' },
-    { label: 'Under Review', value: pendingCount, icon: Clock, color: 'text-amber-400', bg: 'bg-amber-500/[0.08]', border: 'border-amber-500/20', glow: 'shadow-amber-500/10' },
-    { label: 'Fraud Flagged', value: flaggedCount, icon: AlertTriangle, color: 'text-red-400', bg: 'bg-red-500/[0.08]', border: 'border-red-500/20', glow: 'shadow-red-500/10' },
+    { label: 'Total Claims', value: claims.length, icon: FileText, accentColor: '#22d3ee', accentRgb: '6,182,212' },
+    { label: 'Settled Amount', value: `$${totalAmount.toFixed(2)}`, icon: DollarSign, accentColor: '#34d399', accentRgb: '16,185,129' },
+    { label: 'Under Review', value: pendingCount, icon: Clock, accentColor: '#fbbf24', accentRgb: '245,158,11' },
+    { label: 'Fraud Flagged', value: flaggedCount, icon: AlertTriangle, accentColor: '#f87171', accentRgb: '239,68,68' },
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <motion.div className="space-y-6" variants={containerVariants} initial="hidden" animate="visible">
+      <motion.div variants={itemVariants} className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {STAT_CARDS.map((stat, i) => {
           const Icon = stat.icon;
           return (
             <motion.div
               key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.06, type: 'spring', stiffness: 200 }}
-              whileHover={{ y: -3, scale: 1.02 }}
-              className={`p-4 rounded-2xl border ${stat.bg} ${stat.border} backdrop-blur-xl shadow-lg ${stat.glow} transition-all duration-200`}
+              whileHover={{ y: -4, scale: 1.02 }}
+              className="p-5 rounded-2xl relative overflow-hidden cursor-default transition-all duration-200"
+              style={{
+                background: `linear-gradient(145deg, rgba(${stat.accentRgb},0.1) 0%, rgba(${stat.accentRgb},0.03) 100%)`,
+                border: `1px solid rgba(${stat.accentRgb},0.2)`,
+                boxShadow: `0 8px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.02) inset`,
+              }}
             >
+              <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, rgba(${stat.accentRgb},0.4), transparent)` }} />
               <div className="flex items-center justify-between mb-3">
-                <div className={`p-2 rounded-xl ${stat.bg} border ${stat.border}`}>
-                  <Icon className={`w-4 h-4 ${stat.color}`} />
+                <div className="p-2 rounded-xl" style={{ background: `rgba(${stat.accentRgb},0.12)`, border: `1px solid rgba(${stat.accentRgb},0.2)` }}>
+                  <Icon className="w-4 h-4" style={{ color: stat.accentColor }} />
                 </div>
                 <motion.div
-                  className={`w-1.5 h-1.5 rounded-full ${stat.color.replace('text-', 'bg-')}`}
+                  className="w-1.5 h-1.5 rounded-full"
+                  style={{ background: stat.accentColor }}
                   animate={{ opacity: [1, 0.4, 1] }}
                   transition={{ repeat: Infinity, duration: 2, delay: i * 0.3 }}
                 />
               </div>
-              <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
-              <div className="text-xs text-slate-500 mt-0.5">{stat.label}</div>
+              <div className="text-2xl font-bold tracking-tight" style={{ color: stat.accentColor }}>{stat.value}</div>
+              <div className="text-xs text-slate-500 mt-0.5 font-medium">{stat.label}</div>
             </motion.div>
           );
         })}
-      </div>
+      </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.25 }}
-        className="rounded-2xl border border-slate-700/40 backdrop-blur-xl overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)' }}
+        variants={itemVariants}
+        className="rounded-2xl relative overflow-hidden"
+        style={PANEL}
       >
-        <div className="p-6 border-b border-slate-700/40">
+        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(139,92,246,0.4), transparent)' }} />
+        <div className="p-6" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-cyan-500/15 border border-cyan-500/25">
-                <FileText className="w-4 h-4 text-cyan-400" />
+              <div className="p-1.5 rounded-lg" style={{ background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.25)' }}>
+                <FileText className="w-4 h-4" style={{ color: '#22d3ee' }} />
               </div>
               <h2 className="text-base font-bold text-white">Claims History</h2>
               {claims.length > 0 && (
-                <span className="px-2 py-0.5 rounded-full text-xs bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-medium">
+                <span
+                  className="px-2 py-0.5 rounded-full text-xs font-medium"
+                  style={{ background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.2)', color: '#22d3ee' }}
+                >
                   {claims.length} total
                 </span>
               )}
             </div>
             <div className="flex items-center gap-2 flex-wrap">
-              <Filter className="w-3.5 h-3.5 text-slate-500" />
+              <Filter className="w-3.5 h-3.5 text-slate-600" />
               <div className="flex gap-1 flex-wrap">
                 {FILTER_TABS.map((tab) => (
                   <motion.button
@@ -161,17 +140,23 @@ export function Claims() {
                     onClick={() => setFilter(tab.value)}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1 ${
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1"
+                    style={
                       filter === tab.value
-                        ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm shadow-cyan-500/10'
-                        : 'text-slate-500 hover:text-slate-300 hover:bg-white/5 border border-transparent'
-                    }`}
+                        ? { background: 'rgba(139,92,246,0.15)', color: '#c4b5fd', border: '1px solid rgba(139,92,246,0.3)', boxShadow: '0 0 12px rgba(139,92,246,0.1)' }
+                        : { background: 'transparent', color: '#64748b', border: '1px solid transparent' }
+                    }
                   >
                     {tab.label}
                     {tab.count !== undefined && tab.count > 0 && (
-                      <span className={`px-1 rounded-full text-[10px] font-bold ${
-                        filter === tab.value ? 'bg-cyan-400/20 text-cyan-300' : 'bg-slate-700/60 text-slate-400'
-                      }`}>
+                      <span
+                        className="px-1 rounded-full text-[10px] font-bold"
+                        style={
+                          filter === tab.value
+                            ? { background: 'rgba(139,92,246,0.2)', color: '#c4b5fd' }
+                            : { background: 'rgba(255,255,255,0.06)', color: '#64748b' }
+                        }
+                      >
                         {tab.count}
                       </span>
                     )}
@@ -189,8 +174,11 @@ export function Claims() {
               animate={{ opacity: 1 }}
               className="flex flex-col items-center justify-center py-16 text-slate-600"
             >
-              <div className="w-16 h-16 rounded-2xl bg-slate-800/50 border border-slate-700/30 flex items-center justify-center mb-4">
-                <FileText className="w-8 h-8 opacity-30" />
+              <div
+                className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4"
+                style={{ background: 'rgba(139,92,246,0.07)', border: '1px solid rgba(139,92,246,0.14)' }}
+              >
+                <FileText className="w-8 h-8 opacity-30" style={{ color: '#a78bfa' }} />
               </div>
               <p className="text-sm font-medium text-slate-500">No claims found</p>
               <p className="text-xs mt-1 text-slate-600">
@@ -213,31 +201,39 @@ export function Claims() {
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, x: -20 }}
-                      transition={{ delay: i * 0.04, type: 'spring', stiffness: 200 }}
-                      className={`rounded-xl border ${config.border} backdrop-blur-xl overflow-hidden shadow-sm ${config.glow} transition-all duration-200`}
-                      style={{ background: `linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 100%)` }}
+                      transition={{ delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
+                      className="rounded-xl overflow-hidden"
+                      style={{
+                        background: `linear-gradient(135deg, rgba(${config.accentRgb},0.04) 0%, rgba(255,255,255,0.015) 100%)`,
+                        border: `1px solid rgba(${config.accentRgb},0.18)`,
+                        boxShadow: `0 2px 12px rgba(0,0,0,0.3)`,
+                      }}
                     >
                       <motion.button
-                        className="w-full p-4 flex items-center gap-3 text-left hover:bg-white/[0.02] transition-colors"
+                        className="w-full p-4 flex items-center gap-3 text-left transition-colors"
                         onClick={() => setExpanded(isExpanded ? null : claim.id)}
                         whileHover={{ backgroundColor: 'rgba(255,255,255,0.02)' }}
                       >
-                        <motion.div
-                          className={`p-2.5 rounded-xl ${config.bg} border ${config.border} flex-shrink-0`}
-                          whileHover={{ scale: 1.1 }}
+                        <div
+                          className="p-2.5 rounded-xl flex-shrink-0"
+                          style={{ background: `rgba(${config.accentRgb},0.1)`, border: `1px solid rgba(${config.accentRgb},0.2)` }}
                         >
-                          <StatusIcon className={`w-4 h-4 ${config.color}`} />
-                        </motion.div>
+                          <StatusIcon className="w-4 h-4" style={{ color: config.accentColor }} />
+                        </div>
 
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="text-sm font-semibold text-white">{claim.incident_type}</span>
-                            <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${config.bg} ${config.border} ${config.color}`}>
+                            <span
+                              className="text-xs px-2 py-0.5 rounded-full font-medium"
+                              style={{ background: `rgba(${config.accentRgb},0.1)`, border: `1px solid rgba(${config.accentRgb},0.2)`, color: config.accentColor }}
+                            >
                               {config.label}
                             </span>
                             {claim.status === 'pending_admin_review' && (
                               <motion.span
-                                className="text-xs px-2 py-0.5 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400 font-medium flex items-center gap-1"
+                                className="text-xs px-2 py-0.5 rounded-full font-medium flex items-center gap-1"
+                                style={{ background: 'rgba(249,115,22,0.1)', border: '1px solid rgba(249,115,22,0.3)', color: '#fb923c' }}
                                 animate={{ opacity: [1, 0.6, 1] }}
                                 transition={{ repeat: Infinity, duration: 1.5 }}
                               >
@@ -252,18 +248,17 @@ export function Claims() {
                         </div>
 
                         <div className="text-right shrink-0">
-                          <div className={`text-base font-bold ${config.color}`}>${claim.amount.toFixed(2)}</div>
-                          <div className={`text-xs mt-0.5 ${
-                            claim.fraud_score > 60 ? 'text-red-500' :
-                            claim.fraud_score > 35 ? 'text-amber-500' : 'text-slate-600'
-                          }`}>Fraud: {claim.fraud_score}/100</div>
+                          <div className="text-base font-bold" style={{ color: config.accentColor }}>${claim.amount.toFixed(2)}</div>
+                          <div
+                            className="text-xs mt-0.5"
+                            style={{ color: claim.fraud_score > 60 ? '#f87171' : claim.fraud_score > 35 ? '#fbbf24' : '#475569' }}
+                          >
+                            Fraud: {claim.fraud_score}/100
+                          </div>
                         </div>
 
-                        <motion.div
-                          animate={{ rotate: isExpanded ? 180 : 0 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <ChevronDown className="w-4 h-4 text-slate-500 flex-shrink-0" />
+                        <motion.div animate={{ rotate: isExpanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                          <ChevronDown className="w-4 h-4 text-slate-600 flex-shrink-0" />
                         </motion.div>
                       </motion.button>
 
@@ -276,28 +271,38 @@ export function Claims() {
                             transition={{ duration: 0.25, ease: 'easeInOut' }}
                             className="overflow-hidden"
                           >
-                            <div className={`px-4 pb-4 border-t ${config.border} border-opacity-50 pt-3`}>
+                            <div
+                              className="px-4 pb-4 pt-3"
+                              style={{ borderTop: `1px solid rgba(${config.accentRgb},0.12)` }}
+                            >
                               <div className="grid grid-cols-2 gap-2 mb-3">
                                 {[
-                                  { label: 'AI Decision', value: config.label, color: config.color },
-                                  { label: 'Coverage Limit', value: `$${insurance?.coverage?.toFixed(2) ?? 'N/A'}`, color: 'text-white' },
+                                  { label: 'AI Decision', value: config.label, color: config.accentColor },
+                                  { label: 'Coverage Limit', value: `$${insurance?.coverage?.toFixed(2) ?? 'N/A'}`, color: '#e2e8f0' },
                                   ...(tx ? [
-                                    { label: 'Transaction Type', value: tx.type.charAt(0).toUpperCase() + tx.type.slice(1), color: 'text-white' },
-                                    { label: 'Location', value: tx.location, color: 'text-slate-300' },
+                                    { label: 'Transaction Type', value: tx.type.charAt(0).toUpperCase() + tx.type.slice(1), color: '#e2e8f0' },
+                                    { label: 'Location', value: tx.location, color: '#cbd5e1' },
                                   ] : []),
-                                  { label: 'Fraud Score', value: `${claim.fraud_score}/100`, color: claim.fraud_score > 60 ? 'text-red-400' : claim.fraud_score > 35 ? 'text-amber-400' : 'text-emerald-400' },
+                                  { label: 'Fraud Score', value: `${claim.fraud_score}/100`, color: claim.fraud_score > 60 ? '#f87171' : claim.fraud_score > 35 ? '#fbbf24' : '#34d399' },
                                 ].map((item) => (
-                                  <div key={item.label} className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.05]">
+                                  <div
+                                    key={item.label}
+                                    className="p-2.5 rounded-xl"
+                                    style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.05)' }}
+                                  >
                                     <div className="text-xs text-slate-500 mb-0.5">{item.label}</div>
-                                    <div className={`text-sm font-semibold ${item.color}`}>{item.value}</div>
+                                    <div className="text-sm font-semibold" style={{ color: item.color }}>{item.value}</div>
                                   </div>
                                 ))}
                               </div>
 
                               {claim.ai_reason && (
-                                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.05] mb-3">
+                                <div
+                                  className="p-3 rounded-xl mb-3"
+                                  style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.05)' }}
+                                >
                                   <div className="text-xs text-slate-500 mb-1.5 flex items-center gap-1.5">
-                                    <Sparkles className="w-3 h-3 text-cyan-400" />
+                                    <Sparkles className="w-3 h-3" style={{ color: '#22d3ee' }} />
                                     AI Reasoning
                                   </div>
                                   <p className="text-xs text-slate-300 leading-relaxed">{claim.ai_reason}</p>
@@ -308,10 +313,11 @@ export function Claims() {
                                 <motion.div
                                   initial={{ opacity: 0, scale: 0.95 }}
                                   animate={{ opacity: 1, scale: 1 }}
-                                  className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center gap-2 shadow-sm shadow-emerald-500/10"
+                                  className="p-3 rounded-xl flex items-center gap-2"
+                                  style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)' }}
                                 >
-                                  <DollarSign className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                                  <span className="text-xs text-emerald-400 font-medium">
+                                  <DollarSign className="w-4 h-4 flex-shrink-0" style={{ color: '#34d399' }} />
+                                  <span className="text-xs font-medium" style={{ color: '#34d399' }}>
                                     ${claim.amount.toFixed(2)} settled — {claim.settled_at ? new Date(claim.settled_at).toLocaleString() : 'Processed'}
                                   </span>
                                 </motion.div>
@@ -321,10 +327,11 @@ export function Claims() {
                                 <motion.div
                                   initial={{ opacity: 0, scale: 0.95 }}
                                   animate={{ opacity: 1, scale: 1 }}
-                                  className="p-3 rounded-xl bg-orange-500/10 border border-orange-500/30 flex items-center gap-2 shadow-sm shadow-orange-500/10"
+                                  className="p-3 rounded-xl flex items-center gap-2"
+                                  style={{ background: 'rgba(249,115,22,0.08)', border: '1px solid rgba(249,115,22,0.25)' }}
                                 >
-                                  <ShieldCheck className="w-4 h-4 text-orange-400 flex-shrink-0" />
-                                  <span className="text-xs text-orange-300 font-medium">
+                                  <ShieldCheck className="w-4 h-4 flex-shrink-0" style={{ color: '#fb923c' }} />
+                                  <span className="text-xs font-medium" style={{ color: '#fdba74' }}>
                                     Awaiting admin approval in the Admin Panel. High-value claim requires manual authorization.
                                   </span>
                                 </motion.div>
@@ -334,10 +341,11 @@ export function Claims() {
                                 <motion.div
                                   initial={{ opacity: 0, scale: 0.95 }}
                                   animate={{ opacity: 1, scale: 1 }}
-                                  className="p-3 rounded-xl bg-red-500/10 border border-red-500/25 flex items-center gap-2 shadow-sm shadow-red-500/10"
+                                  className="p-3 rounded-xl flex items-center gap-2"
+                                  style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)' }}
                                 >
-                                  <AlertTriangle className="w-4 h-4 text-red-400 flex-shrink-0" />
-                                  <span className="text-xs text-red-300 font-medium">
+                                  <AlertTriangle className="w-4 h-4 flex-shrink-0" style={{ color: '#f87171' }} />
+                                  <span className="text-xs font-medium" style={{ color: '#fca5a5' }}>
                                     Fraud detected — This claim has been blocked and reported. Check Admin Panel for details.
                                   </span>
                                 </motion.div>
@@ -354,6 +362,6 @@ export function Claims() {
           )}
         </div>
       </motion.div>
-    </div>
+    </motion.div>
   );
 }

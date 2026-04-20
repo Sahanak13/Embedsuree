@@ -44,27 +44,95 @@ export default function App() {
   }, [setProfile]);
 
   return (
-    <div className="min-h-screen bg-[#060a10] text-white">
+    <div className="min-h-screen text-white" style={{ background: '#050509' }}>
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-48 left-1/4 w-[800px] h-[600px] rounded-full blur-[140px]" style={{ background: 'radial-gradient(ellipse, rgba(88,28,235,0.12) 0%, rgba(59,130,246,0.08) 50%, transparent 70%)' }} />
-        <div className="absolute top-1/2 -left-60 w-[500px] h-[500px] rounded-full blur-[120px]" style={{ background: 'radial-gradient(ellipse, rgba(124,58,237,0.1) 0%, rgba(99,102,241,0.06) 50%, transparent 70%)' }} />
-        <div className="absolute bottom-0 right-1/4 w-[700px] h-[500px] rounded-full blur-[120px]" style={{ background: 'radial-gradient(ellipse, rgba(59,130,246,0.08) 0%, rgba(88,28,235,0.06) 50%, transparent 70%)' }} />
-        <div className="absolute top-1/4 right-0 w-[400px] h-[400px] rounded-full blur-[100px]" style={{ background: 'radial-gradient(ellipse, rgba(6,182,212,0.06) 0%, transparent 70%)' }} />
-        <div className="absolute bottom-1/3 left-1/3 w-[300px] h-[300px] rounded-full blur-[80px]" style={{ background: 'radial-gradient(ellipse, rgba(139,92,246,0.07) 0%, transparent 70%)' }} />
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: 900,
+            height: 700,
+            top: -200,
+            left: '15%',
+            background: 'radial-gradient(ellipse, rgba(124,58,237,0.14) 0%, rgba(59,130,246,0.08) 40%, transparent 70%)',
+            filter: 'blur(80px)',
+          }}
+          animate={{ y: [0, -30, 0], scale: [1, 1.06, 1] }}
+          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: 600,
+            height: 600,
+            top: '40%',
+            left: -200,
+            background: 'radial-gradient(ellipse, rgba(139,92,246,0.1) 0%, rgba(99,102,241,0.05) 50%, transparent 70%)',
+            filter: 'blur(80px)',
+          }}
+          animate={{ y: [0, 25, 0], scale: [1, 0.95, 1] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+        />
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: 700,
+            height: 500,
+            bottom: 0,
+            right: '15%',
+            background: 'radial-gradient(ellipse, rgba(59,130,246,0.1) 0%, rgba(88,28,235,0.06) 50%, transparent 70%)',
+            filter: 'blur(80px)',
+          }}
+          animate={{ y: [0, -20, 0], scale: [1, 1.04, 1] }}
+          transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut', delay: 4 }}
+        />
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: 400,
+            height: 400,
+            top: '20%',
+            right: 0,
+            background: 'radial-gradient(ellipse, rgba(6,182,212,0.07) 0%, transparent 70%)',
+            filter: 'blur(60px)',
+          }}
+          animate={{ y: [0, 15, 0] }}
+          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+        />
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: 300,
+            height: 300,
+            bottom: '25%',
+            left: '40%',
+            background: 'radial-gradient(ellipse, rgba(139,92,246,0.08) 0%, transparent 70%)',
+            filter: 'blur(60px)',
+          }}
+          animate={{ scale: [1, 1.1, 1], opacity: [0.6, 1, 0.6] }}
+          transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
+        />
+        <div
+          className="absolute inset-0 opacity-[0.018]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+            backgroundRepeat: 'repeat',
+            backgroundSize: '128px 128px',
+          }}
+        />
       </div>
 
       <Sidebar />
       <Header />
 
       <main className="pl-64 pt-16 min-h-screen">
-        <div className="p-6 max-w-7xl">
+        <div className="p-7 max-w-[1400px]">
           <AnimatePresence mode="wait">
             <motion.div
               key={activePage}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.2, ease: 'easeOut' }}
+              initial={{ opacity: 0, y: 16, filter: 'blur(4px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, y: -16, filter: 'blur(4px)' }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             >
               <PageContent page={activePage} />
             </motion.div>

@@ -17,48 +17,48 @@ interface LastResult {
   riskAnalysis: RiskAnalysis;
 }
 
+const PANEL = {
+  background: 'linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 100%)',
+  border: '1px solid rgba(139,92,246,0.15)',
+  backdropFilter: 'blur(28px)',
+  WebkitBackdropFilter: 'blur(28px)',
+  boxShadow: '0 8px 32px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.025) inset',
+};
+
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.07 } },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } },
+};
+
 const ACTION_BUTTONS = [
   {
     type: 'product' as TransactionType,
     label: 'Buy Product',
     icon: ShoppingBag,
     description: 'Trigger purchase protection',
-    gradient: 'from-cyan-500/20 via-cyan-600/10 to-transparent',
-    border: 'border-cyan-500/30',
-    hoverBorder: 'hover:border-cyan-400/60',
-    iconColor: 'text-cyan-400',
-    iconBg: 'bg-cyan-500/15',
-    glow: 'shadow-cyan-500/15',
-    hoverGlow: 'hover:shadow-cyan-500/25',
-    badgeColor: 'text-cyan-300 bg-cyan-500/10 border-cyan-500/25',
+    accentColor: '#22d3ee',
+    accentRgb: '6,182,212',
   },
   {
     type: 'cab' as TransactionType,
     label: 'Book Cab',
     icon: Car,
     description: 'Trigger ride insurance',
-    gradient: 'from-blue-500/20 via-blue-600/10 to-transparent',
-    border: 'border-blue-500/30',
-    hoverBorder: 'hover:border-blue-400/60',
-    iconColor: 'text-blue-400',
-    iconBg: 'bg-blue-500/15',
-    glow: 'shadow-blue-500/15',
-    hoverGlow: 'hover:shadow-blue-500/25',
-    badgeColor: 'text-blue-300 bg-blue-500/10 border-blue-500/25',
+    accentColor: '#60a5fa',
+    accentRgb: '59,130,246',
   },
   {
     type: 'travel' as TransactionType,
     label: 'Start Travel',
     icon: Plane,
     description: 'Trigger travel insurance',
-    gradient: 'from-emerald-500/20 via-emerald-600/10 to-transparent',
-    border: 'border-emerald-500/30',
-    hoverBorder: 'hover:border-emerald-400/60',
-    iconColor: 'text-emerald-400',
-    iconBg: 'bg-emerald-500/15',
-    glow: 'shadow-emerald-500/15',
-    hoverGlow: 'hover:shadow-emerald-500/25',
-    badgeColor: 'text-emerald-300 bg-emerald-500/10 border-emerald-500/25',
+    accentColor: '#34d399',
+    accentRgb: '16,185,129',
   },
 ];
 
@@ -68,28 +68,31 @@ function InsuranceActivatedCard({ result }: { result: LastResult }) {
       initial={{ opacity: 0, scale: 0.9, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.9, y: -20 }}
-      className="p-5 rounded-2xl border border-cyan-500/30 backdrop-blur-xl shadow-lg shadow-cyan-500/10"
-      style={{ background: 'linear-gradient(135deg, rgba(6,182,212,0.12) 0%, rgba(59,130,246,0.06) 100%)' }}
+      className="p-5 rounded-2xl relative overflow-hidden"
+      style={{
+        background: 'linear-gradient(135deg, rgba(6,182,212,0.1) 0%, rgba(59,130,246,0.05) 100%)',
+        border: '1px solid rgba(6,182,212,0.25)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.4), 0 0 20px rgba(6,182,212,0.08)',
+      }}
     >
+      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(6,182,212,0.5), transparent)' }} />
       <div className="flex items-start gap-4">
         <motion.div
           initial={{ scale: 0, rotate: -180 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-          className="w-12 h-12 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center shrink-0 shadow-lg shadow-cyan-500/15"
+          className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+          style={{ background: 'rgba(6,182,212,0.15)', border: '1px solid rgba(6,182,212,0.35)', boxShadow: '0 0 16px rgba(6,182,212,0.2)' }}
         >
-          <Shield className="w-6 h-6 text-cyan-400" />
+          <Shield className="w-6 h-6" style={{ color: '#22d3ee' }} />
         </motion.div>
         <div className="flex-1">
-          <motion.div
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-          >
+          <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-sm font-bold text-cyan-300">Insurance Activated</span>
+              <span className="text-sm font-bold" style={{ color: '#22d3ee' }}>Insurance Activated</span>
               <motion.div
-                className="w-2 h-2 rounded-full bg-cyan-400"
+                className="w-2 h-2 rounded-full"
+                style={{ background: '#22d3ee' }}
                 animate={{ scale: [1, 1.5, 1], opacity: [1, 0.6, 1] }}
                 transition={{ repeat: Infinity, duration: 1.5 }}
               />
@@ -98,19 +101,20 @@ function InsuranceActivatedCard({ result }: { result: LastResult }) {
           </motion.div>
           <div className="grid grid-cols-2 gap-2 mt-3">
             {[
-              { label: 'Premium', value: `$${result.insurance.premium}`, color: 'text-cyan-400', bg: 'bg-cyan-500/10 border-cyan-500/20' },
-              { label: 'Coverage', value: `$${result.insurance.coverage}`, color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/20' },
-              { label: 'Risk Level', value: result.riskAnalysis.level, color: result.riskAnalysis.level === 'Low' ? 'text-emerald-400' : result.riskAnalysis.level === 'Medium' ? 'text-amber-400' : 'text-red-400', bg: 'bg-white/[0.04] border-white/[0.08]' },
-              { label: 'AI Confidence', value: `${Math.round(result.insurance.ai_confidence * 100)}%`, color: 'text-blue-400', bg: 'bg-blue-500/10 border-blue-500/20' },
-            ].map(({ label, value, color, bg }) => (
+              { label: 'Premium', value: `$${result.insurance.premium}`, color: '#22d3ee', border: 'rgba(6,182,212,0.2)' },
+              { label: 'Coverage', value: `$${result.insurance.coverage}`, color: '#34d399', border: 'rgba(16,185,129,0.2)' },
+              { label: 'Risk Level', value: result.riskAnalysis.level, color: result.riskAnalysis.level === 'Low' ? '#34d399' : result.riskAnalysis.level === 'Medium' ? '#fbbf24' : '#f87171', border: 'rgba(255,255,255,0.08)' },
+              { label: 'AI Confidence', value: `${Math.round(result.insurance.ai_confidence * 100)}%`, color: '#60a5fa', border: 'rgba(59,130,246,0.2)' },
+            ].map(({ label, value, color, border }) => (
               <motion.div
                 key={label}
                 initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`p-2.5 rounded-xl border ${bg}`}
+                className="p-2.5 rounded-xl"
+                style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${border}` }}
               >
                 <div className="text-xs text-slate-500 mb-0.5">{label}</div>
-                <div className={`text-sm font-bold ${color}`}>{value}</div>
+                <div className="text-sm font-bold" style={{ color }}>{value}</div>
               </motion.div>
             ))}
           </div>
@@ -125,44 +129,14 @@ function InsuranceActivatedCard({ result }: { result: LastResult }) {
 }
 
 function ClaimResultCard({ claimStatus, claimAmount, reason }: { claimStatus: string; claimAmount: number; reason: string }) {
-  const configs: Record<string, { title: string; subtitle: string; color: string; textColor: string; icon: React.FC<{ className?: string }> }> = {
-    approved: {
-      icon: TrendingUp,
-      title: 'Claim Approved',
-      subtitle: `$${claimAmount.toFixed(2)} Credited`,
-      color: 'border-emerald-500/30 from-emerald-500/12 to-emerald-600/4',
-      textColor: 'text-emerald-400',
-    },
-    under_review: {
-      icon: Clock,
-      title: 'Under Review',
-      subtitle: 'Verifying incident',
-      color: 'border-amber-500/30 from-amber-500/12 to-amber-600/4',
-      textColor: 'text-amber-400',
-    },
-    pending_admin_review: {
-      icon: ShieldCheck,
-      title: 'Admin Approval Required',
-      subtitle: `$${claimAmount.toFixed(2)} pending admin`,
-      color: 'border-orange-500/30 from-orange-500/12 to-orange-600/4',
-      textColor: 'text-orange-400',
-    },
-    flagged: {
-      icon: AlertCircle,
-      title: 'Fraud Alert',
-      subtitle: 'Claim Flagged',
-      color: 'border-red-500/30 from-red-500/12 to-red-600/4',
-      textColor: 'text-red-400',
-    },
+  const configs: Record<string, { title: string; subtitle: string; accentColor: string; accentRgb: string; icon: React.FC<{ className?: string }> }> = {
+    approved: { icon: TrendingUp, title: 'Claim Approved', subtitle: `$${claimAmount.toFixed(2)} Credited`, accentColor: '#34d399', accentRgb: '16,185,129' },
+    under_review: { icon: Clock, title: 'Under Review', subtitle: 'Verifying incident', accentColor: '#fbbf24', accentRgb: '245,158,11' },
+    pending_admin_review: { icon: ShieldCheck, title: 'Admin Approval Required', subtitle: `$${claimAmount.toFixed(2)} pending admin`, accentColor: '#fb923c', accentRgb: '249,115,22' },
+    flagged: { icon: AlertCircle, title: 'Fraud Alert', subtitle: 'Claim Flagged', accentColor: '#f87171', accentRgb: '239,68,68' },
   };
 
-  const config = configs[claimStatus] ?? {
-    icon: Clock,
-    title: 'Processing',
-    subtitle: 'Please wait',
-    color: 'border-slate-700/50 from-slate-800/50 to-slate-900/50',
-    textColor: 'text-slate-400',
-  };
+  const config = configs[claimStatus] ?? { icon: Clock, title: 'Processing', subtitle: 'Please wait', accentColor: '#94a3b8', accentRgb: '148,163,184' };
   const Icon = config.icon;
 
   return (
@@ -170,43 +144,52 @@ function ClaimResultCard({ claimStatus, claimAmount, reason }: { claimStatus: st
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0 }}
-      className={`p-5 rounded-2xl border bg-gradient-to-br ${config.color} backdrop-blur-xl`}
+      className="p-5 rounded-2xl relative overflow-hidden"
+      style={{
+        background: `linear-gradient(135deg, rgba(${config.accentRgb},0.1) 0%, rgba(${config.accentRgb},0.03) 100%)`,
+        border: `1px solid rgba(${config.accentRgb},0.25)`,
+        boxShadow: `0 8px 24px rgba(0,0,0,0.4)`,
+      }}
     >
+      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, rgba(${config.accentRgb},0.5), transparent)` }} />
       <div className="flex items-center gap-3 mb-3">
         <motion.div
-          className={`p-2.5 rounded-xl ${config.color.split(' ')[1]} border ${config.color.split(' ')[0]}`}
+          className="p-2.5 rounded-xl"
+          style={{ background: `rgba(${config.accentRgb},0.12)`, border: `1px solid rgba(${config.accentRgb},0.25)` }}
           initial={{ scale: 0, rotate: -90 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: 'spring', stiffness: 200 }}
         >
-          <Icon className={`w-5 h-5 ${config.textColor}`} />
+          <Icon className="w-5 h-5" style={{ color: config.accentColor }} />
         </motion.div>
         <div>
-          <div className={`font-bold text-base ${config.textColor}`}>{config.title}</div>
+          <div className="font-bold text-base" style={{ color: config.accentColor }}>{config.title}</div>
           <div className="text-sm text-slate-400">{config.subtitle}</div>
         </div>
       </div>
       <p className="text-xs text-slate-500 leading-relaxed">{reason}</p>
       {claimStatus === 'approved' && (
         <motion.div
-          className="mt-3 flex items-center gap-2 p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20"
+          className="mt-3 flex items-center gap-2 p-2.5 rounded-xl"
+          style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)' }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          <TrendingUp className="w-4 h-4 text-emerald-400" />
-          <span className="text-xs text-emerald-400 font-medium">Settlement processing complete</span>
+          <TrendingUp className="w-4 h-4" style={{ color: '#34d399' }} />
+          <span className="text-xs font-medium" style={{ color: '#34d399' }}>Settlement processing complete</span>
         </motion.div>
       )}
       {claimStatus === 'pending_admin_review' && (
         <motion.div
-          className="mt-3 flex items-center gap-2 p-2.5 rounded-xl bg-orange-500/10 border border-orange-500/25"
+          className="mt-3 flex items-center gap-2 p-2.5 rounded-xl"
+          style={{ background: 'rgba(249,115,22,0.08)', border: '1px solid rgba(249,115,22,0.25)' }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          <Sparkles className="w-4 h-4 text-orange-400" />
-          <span className="text-xs text-orange-300 font-medium">Sent to Admin Panel for review — check Admin section</span>
+          <Sparkles className="w-4 h-4" style={{ color: '#fb923c' }} />
+          <span className="text-xs font-medium" style={{ color: '#fdba74' }}>Sent to Admin Panel for review — check Admin section</span>
         </motion.div>
       )}
     </motion.div>
@@ -245,22 +228,27 @@ export function Simulation() {
   const recentTxs = [...transactions].slice(0, 4);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+    <motion.div
+      className="grid grid-cols-1 lg:grid-cols-5 gap-6"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       <div className="lg:col-span-3 space-y-5">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="p-6 rounded-2xl border border-slate-700/40 backdrop-blur-xl"
-          style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)' }}
-        >
+        <motion.div variants={itemVariants} whileHover={{ y: -2 }} className="p-6 rounded-2xl relative overflow-hidden transition-all duration-300" style={PANEL}>
+          <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(139,92,246,0.4), transparent)' }} />
           <div className="flex items-center gap-2 mb-6">
-            <div className="p-1.5 rounded-lg bg-cyan-500/15 border border-cyan-500/25">
-              <Zap className="w-4 h-4 text-cyan-400" />
+            <div className="p-1.5 rounded-lg" style={{ background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.25)' }}>
+              <Zap className="w-4 h-4" style={{ color: '#22d3ee' }} />
             </div>
             <h2 className="text-base font-bold text-white">Action Center</h2>
-            <span className="ml-auto px-2.5 py-1 rounded-full text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium flex items-center gap-1">
+            <span
+              className="ml-auto px-2.5 py-1 rounded-full text-xs font-medium flex items-center gap-1"
+              style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', color: '#34d399' }}
+            >
               <motion.div
-                className="w-1.5 h-1.5 rounded-full bg-emerald-400"
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ background: '#34d399' }}
                 animate={{ opacity: [1, 0.4, 1] }}
                 transition={{ repeat: Infinity, duration: 1.5 }}
               />
@@ -277,60 +265,60 @@ export function Simulation() {
                   key={btn.type}
                   onClick={() => handleTransaction(btn.type)}
                   disabled={loadingType !== null}
-                  whileHover={{ scale: 1.04, y: -3 }}
+                  whileHover={{ scale: 1.04, y: -4 }}
                   whileTap={{ scale: 0.97 }}
-                  className={`relative p-5 rounded-2xl border bg-gradient-to-br ${btn.gradient} ${btn.border} ${btn.hoverBorder} shadow-xl ${btn.glow} ${btn.hoverGlow} transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed overflow-hidden group`}
+                  className="relative p-5 rounded-2xl transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed overflow-hidden group"
+                  style={{
+                    background: `linear-gradient(145deg, rgba(${btn.accentRgb},0.12) 0%, rgba(${btn.accentRgb},0.04) 100%)`,
+                    border: `1px solid rgba(${btn.accentRgb},0.25)`,
+                    boxShadow: `0 4px 20px rgba(${btn.accentRgb},0.1)`,
+                  }}
                 >
                   {isLoading && (
                     <motion.div
-                      className="absolute inset-0 bg-white/[0.04]"
+                      className="absolute inset-0"
+                      style={{ background: 'rgba(255,255,255,0.03)' }}
                       animate={{ opacity: [0.5, 1, 0.5] }}
                       transition={{ repeat: Infinity, duration: 0.8 }}
                     />
                   )}
+                  <div className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: `linear-gradient(90deg, transparent, rgba(${btn.accentRgb},0.5), transparent)` }} />
                   <div className="flex flex-col items-center gap-3">
                     {isLoading ? (
                       <motion.div
-                        className={`w-10 h-10 rounded-xl border-2 border-dashed ${btn.iconColor}`}
+                        className="w-10 h-10 rounded-xl border-2 border-dashed"
+                        style={{ borderColor: btn.accentColor }}
                         animate={{ rotate: 360 }}
                         transition={{ repeat: Infinity, duration: 0.9, ease: 'linear' }}
                       />
                     ) : (
-                      <motion.div
-                        className={`w-10 h-10 rounded-xl ${btn.iconBg} border ${btn.border} flex items-center justify-center group-hover:scale-110 transition-transform`}
-                        whileHover={{ boxShadow: '0 0 20px rgba(6,182,212,0.3)' }}
+                      <div
+                        className="w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform"
+                        style={{ background: `rgba(${btn.accentRgb},0.12)`, border: `1px solid rgba(${btn.accentRgb},0.25)` }}
                       >
-                        <Icon className={`w-5 h-5 ${btn.iconColor}`} />
-                      </motion.div>
+                        <Icon className="w-5 h-5" style={{ color: btn.accentColor }} />
+                      </div>
                     )}
                     <div>
                       <div className="text-sm font-bold text-white">{btn.label}</div>
                       <div className="text-xs text-slate-500 mt-0.5">{isLoading ? 'Analyzing risk...' : btn.description}</div>
                     </div>
                   </div>
-                  <div className={`absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent ${btn.iconColor.replace('text-', 'via-')} to-transparent opacity-0 group-hover:opacity-100 transition-opacity`} />
                 </motion.button>
               );
             })}
           </div>
 
           <AnimatePresence mode="wait">
-            {lastResult && (
-              <InsuranceActivatedCard key={lastResult.transaction.id} result={lastResult} />
-            )}
+            {lastResult && <InsuranceActivatedCard key={lastResult.transaction.id} result={lastResult} />}
           </AnimatePresence>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="p-6 rounded-2xl border border-slate-700/40 backdrop-blur-xl"
-          style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)' }}
-        >
+        <motion.div variants={itemVariants} whileHover={{ y: -2 }} className="p-6 rounded-2xl relative overflow-hidden transition-all duration-300" style={PANEL}>
+          <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(245,158,11,0.4), transparent)' }} />
           <div className="flex items-center gap-2 mb-4">
-            <div className="p-1.5 rounded-lg bg-amber-500/15 border border-amber-500/25">
-              <AlertCircle className="w-4 h-4 text-amber-400" />
+            <div className="p-1.5 rounded-lg" style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.25)' }}>
+              <AlertCircle className="w-4 h-4" style={{ color: '#fbbf24' }} />
             </div>
             <h2 className="text-base font-bold text-white">Incident Simulator</h2>
           </div>
@@ -340,10 +328,13 @@ export function Simulation() {
           </p>
 
           {insurances.length > 0 && (
-            <div className="mb-4 p-3 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+            <div
+              className="mb-4 p-3 rounded-xl"
+              style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.06)' }}
+            >
               <div className="flex items-center gap-2 text-xs text-slate-400">
-                <Shield className="w-3.5 h-3.5 text-cyan-400" />
-                Active policy: <span className="text-cyan-300 font-medium">{insurances[0]?.type}</span>
+                <Shield className="w-3.5 h-3.5" style={{ color: '#22d3ee' }} />
+                Active policy: <span className="font-medium" style={{ color: '#67e8f9' }}>{insurances[0]?.type}</span>
                 <span className="ml-auto text-slate-600">Coverage: <span className="text-white">${insurances[0]?.coverage.toFixed(0)}</span></span>
               </div>
             </div>
@@ -352,20 +343,21 @@ export function Simulation() {
           <motion.button
             onClick={handleIncident}
             disabled={isIncidentLoading || insurances.length === 0}
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ scale: 1.02, y: -1 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full py-3 px-6 rounded-xl font-semibold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-amber-500/10"
+            className="w-full py-3 px-6 rounded-xl font-semibold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             style={{
-              background: isIncidentLoading ? 'rgba(245,158,11,0.1)' : 'linear-gradient(135deg, rgba(245,158,11,0.2), rgba(245,158,11,0.08))',
+              background: isIncidentLoading ? 'rgba(245,158,11,0.08)' : 'linear-gradient(135deg, rgba(245,158,11,0.18), rgba(245,158,11,0.06))',
               border: '1px solid rgba(245,158,11,0.35)',
               color: '#fcd34d',
-              boxShadow: '0 0 20px rgba(245,158,11,0.12), inset 0 1px 0 rgba(245,158,11,0.15)',
+              boxShadow: '0 0 20px rgba(245,158,11,0.1), inset 0 1px 0 rgba(245,158,11,0.12)',
             }}
           >
             {isIncidentLoading ? (
               <>
                 <motion.div
-                  className="w-4 h-4 border-2 border-amber-400/60 border-t-amber-400 rounded-full"
+                  className="w-4 h-4 border-2 border-t-amber-400 rounded-full"
+                  style={{ borderColor: 'rgba(251,191,36,0.4)', borderTopColor: '#fbbf24' }}
                   animate={{ rotate: 360 }}
                   transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}
                 />
@@ -399,16 +391,11 @@ export function Simulation() {
       </div>
 
       <div className="lg:col-span-2 space-y-4">
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.15 }}
-          className="p-6 rounded-2xl border border-slate-700/40 backdrop-blur-xl"
-          style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)' }}
-        >
-          <h3 className="text-sm font-semibold text-slate-300 mb-4 flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
-              <Activity className="w-3.5 h-3.5 text-cyan-400" />
+        <motion.div variants={itemVariants} whileHover={{ y: -2 }} className="p-6 rounded-2xl relative overflow-hidden transition-all duration-300" style={PANEL}>
+          <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(139,92,246,0.4), transparent)' }} />
+          <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+            <div className="p-1.5 rounded-lg" style={{ background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.2)' }}>
+              <Activity className="w-3.5 h-3.5" style={{ color: '#22d3ee' }} />
             </div>
             Live Risk Monitor
           </h3>
@@ -417,7 +404,10 @@ export function Simulation() {
               <RiskGauge score={lastResult.riskAnalysis.score} level={lastResult.riskAnalysis.level} size={160} />
             ) : (
               <div className="text-center py-8 text-slate-600">
-                <div className="w-14 h-14 rounded-2xl bg-slate-800/50 border border-slate-700/30 flex items-center justify-center mx-auto mb-3">
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3"
+                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
+                >
                   <Activity className="w-6 h-6 opacity-30" />
                 </div>
                 <p className="text-sm">No active analysis</p>
@@ -432,14 +422,20 @@ export function Simulation() {
                   key={factor.name}
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.04]"
+                  className="flex items-center justify-between p-2.5 rounded-xl"
+                  style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.04)' }}
                 >
                   <span className="text-xs text-slate-400">{factor.name}</span>
-                  <span className={`text-xs font-medium px-2 py-0.5 rounded-lg ${
-                    factor.impact === 'positive' ? 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/20' :
-                    factor.impact === 'negative' ? 'text-red-400 bg-red-500/10 border border-red-500/20' :
-                    'text-slate-400 bg-slate-700/30 border border-slate-700/40'
-                  }`}>
+                  <span
+                    className="text-xs font-medium px-2 py-0.5 rounded-lg"
+                    style={
+                      factor.impact === 'positive'
+                        ? { color: '#34d399', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.2)' }
+                        : factor.impact === 'negative'
+                        ? { color: '#f87171', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)' }
+                        : { color: '#94a3b8', background: 'rgba(148,163,184,0.08)', border: '1px solid rgba(148,163,184,0.15)' }
+                    }
+                  >
                     {factor.impact}
                   </span>
                 </motion.div>
@@ -448,37 +444,25 @@ export function Simulation() {
           )}
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2 }}
-          className="p-5 rounded-2xl border border-slate-700/40 backdrop-blur-xl"
-          style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)' }}
-        >
-          <h3 className="text-sm font-semibold text-slate-300 mb-3 flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
-              <Shield className="w-3.5 h-3.5 text-cyan-400" />
+        <motion.div variants={itemVariants} whileHover={{ y: -2 }} className="p-5 rounded-2xl relative overflow-hidden transition-all duration-300" style={PANEL}>
+          <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(139,92,246,0.4), transparent)' }} />
+          <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+            <div className="p-1.5 rounded-lg" style={{ background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.2)' }}>
+              <Shield className="w-3.5 h-3.5" style={{ color: '#22d3ee' }} />
             </div>
             Trust Score
           </h3>
           <div className="flex justify-center">
             <TrustScore score={profile?.trust_score ?? 85} size={100} showLabel />
           </div>
-          <p className="text-xs text-slate-600 text-center mt-2">
-            Updated after each claim decision
-          </p>
+          <p className="text-xs text-slate-600 text-center mt-2">Updated after each claim decision</p>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.25 }}
-          className="p-5 rounded-2xl border border-slate-700/40 backdrop-blur-xl"
-          style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)' }}
-        >
-          <h3 className="text-sm font-semibold text-slate-300 mb-3 flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
-              <Clock className="w-3.5 h-3.5 text-cyan-400" />
+        <motion.div variants={itemVariants} whileHover={{ y: -2 }} className="p-5 rounded-2xl relative overflow-hidden transition-all duration-300" style={PANEL}>
+          <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(139,92,246,0.4), transparent)' }} />
+          <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+            <div className="p-1.5 rounded-lg" style={{ background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.2)' }}>
+              <Clock className="w-3.5 h-3.5" style={{ color: '#22d3ee' }} />
             </div>
             Activity Log
           </h3>
@@ -492,7 +476,8 @@ export function Simulation() {
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="flex items-center gap-2 py-2 border-b border-slate-800/50 last:border-0"
+                  className="flex items-center gap-2 py-2"
+                  style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
                 >
                   <MapPin className="w-3 h-3 text-slate-600 shrink-0" />
                   <div className="flex-1 min-w-0">
@@ -506,6 +491,6 @@ export function Simulation() {
           )}
         </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }
